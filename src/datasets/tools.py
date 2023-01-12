@@ -6,15 +6,6 @@ from PIL import Image
 import copy
 
 
-def load_image(path_image: str) -> Image.Image:
-    """Load image from harddrive and return 3-channel PIL image.
-    Args:
-        path_image (str): image path
-    Returns:
-        Image.Image: loaded image
-    """
-    return Image.open(path_image).convert('RGB')
-
 
 def get_person_image_paths(path_person_set: str) -> dict:
     """Creates mapping from person name to list of images.

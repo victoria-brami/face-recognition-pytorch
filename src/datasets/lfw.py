@@ -3,7 +3,7 @@ from .tools import get_person_image_paths, get_persons_with_at_least_k_images
 from ..utils.utils import load_image
 from torchvision import transforms
 from pathlib import Path
-from random import sample, randint
+import numpy as np
 from copy import deepcopy
 
 
@@ -38,22 +38,23 @@ class LFW(Dataset):
         """
         # TODO Please implement this function
         # get the people name
-        select_people_name = list(self._persons_positive)[index]
+        pos_name = list(self._persons_positive)[index]
 
         # select randomly 2 images within the folder
-        nb_select_people_images = len(self._person_paths[select_people_name])
-        anchor_item, positive_item = sample([i for i in range(nb_select_people_images)], 2)
-        anchor, positive = getattr(self._persons_paths, select_people_name)[[anchor_item, positive_item]]
+        nb_pos_images = len(getattr(self._person_paths, pos_name))
+        anchor_item, positive_item = np.random.choice(nb_pos_images, 2, replace=False)
+        anchor, positive = getattr(self._persons_paths, pos_name)[[anchor_item, positive_item]]
 
         # select randomly the negative id
-        other_people_list = deepcopy(*self.persons)
-        other_people_list.remove(select_people_name)
-        neg_people_name = sample(other_people_list, 1)[0]
-        nb_neg_people_images = len(list(self.person_paths[neg_people_name]))
-        neg_id = randint(0, nb_neg_people_images-1)
-        negative =  getattr(self._person_paths, neg_people_name)[neg_id]
+        neg_names = deepcopy(*self.persons)
+        neg_names.remove(pos_name)
+        neg_name = np.random.choice(neg_names, 1)[0]
+        nb_neg_images = len(getattr(self.person_paths, neg_name))
+        neg_id = np.random.choice(nb_neg_images, 1, replace=False)
+        negative =  getattr(self._person_paths, neg_name)[neg_id]
 
         return anchor, positive, negative
+
 
     def __getitem__(self, index: int):
         """Randomly sample a triplet of image tensors.
