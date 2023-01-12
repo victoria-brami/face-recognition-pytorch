@@ -1,0 +1,11 @@
+numpy
+matplotlib
+pillow
+tensorboard
+opencv-python
+torch
+torchvision
+torchmetrics
+logging
+random
+pathlib
