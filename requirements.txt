@@ -9,3 +9,4 @@ torchmetrics
 logging
 random
 pathlib
+pytorch_lightning

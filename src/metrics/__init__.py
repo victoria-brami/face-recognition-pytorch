@@ -1,6 +1,8 @@
-from .metric import AccuracyMetric
+from .metrics import AccuracyMetric, PrecisionRecallMetric, EvaluationMetric
 
 
 __all__ = [
-    "AccuracyMetric"
+    "AccuracyMetric",
+    "PrecisionRecallMetric",
+    "EvaluationMetric"
 ]
