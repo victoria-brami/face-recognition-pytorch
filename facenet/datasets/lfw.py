@@ -43,7 +43,9 @@ class LFW(Dataset):
         # select randomly 2 images within the folder
         nb_pos_images = len(self._person_paths[pos_name])
         anchor_item, positive_item = np.random.choice(nb_pos_images, 2, replace=False)
-        anchor, positive = self._person_paths[pos_name][[anchor_item, positive_item]]
+        anchor = self._person_paths[pos_name][anchor_item]
+        positive = self._person_paths[pos_name][positive_item]
+
 
         # select randomly the negative id
         neg_names = deepcopy(*self._persons)
