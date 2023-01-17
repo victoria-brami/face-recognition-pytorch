@@ -1,4 +1,4 @@
-_target_: trainer.FaceNetTrainer
+_target_: facenet.model.FaceNetLitModule
 
 optimizer:
   _target_: torch.optim.Adam

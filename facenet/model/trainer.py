@@ -1,5 +1,5 @@
 import pytorch_lightning as pl
-from ..model import FaceNet
+from . import FaceNet
 from ..losses import TripletLoss
 import torch
 from ..metrics import EvaluationMetric, AccuracyMetric
