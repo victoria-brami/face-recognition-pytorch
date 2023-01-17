@@ -1,5 +1,5 @@
 defaults:
-   - _self_
+  - _self_
   - trainer: trainer.yaml
   - callbacks: default.yaml
   - logger: wandb.yaml # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
@@ -10,8 +10,8 @@ task_name: "train"
 
 checkpoint_path: null
 
-train: True
+train: true
 
-test: True
+test: true
 
 seed: null
