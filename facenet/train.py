@@ -33,7 +33,10 @@ def train(cfg: DictConfig) -> None:
 
     if cfg.get("train"):
         log.info("Starting training!")
-        trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("checkpoint_path"))
+        ckpt_path = cfg.get("checkpoint_path")
+        if ckpt_path is None:
+            log.warning(f"No previous checkpoint found, Starting from scratch")
+        trainer.fit(model=model, datamodule=datamodule, ckpt_path=ckpt_path)
 
     if cfg.get("test"):
         log.info("Starting testing!")
