@@ -40,6 +40,9 @@ class FaceTripletsDataModule(pl.LightningDataModule):
                 lengths=lengths,
                 generator=Generator().manual_seed(self.hparams.seed),
             )
+            print("Train Set length: {}".format(len(self.data_train)))
+            print("Val Set length: {}".format(len(self.data_val)))
+            print("Test Set length: {}".format(len(self.data_test)))
     
     def train_dataloader(self):
         return DataLoader(self.data_train,
