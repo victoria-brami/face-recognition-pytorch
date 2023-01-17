@@ -1,5 +1,6 @@
-from .utils import load_image
+from .utils import load_image, instantiate_callbacks
 
 __all__ = [
-    'load_image'
+    'load_image',
+    'instantiate_callbacks'
 ]

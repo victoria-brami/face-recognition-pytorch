@@ -2,6 +2,10 @@ from PIL import Image
 import torch.nn as nn
 from pathlib import Path
 import torch
+from typing import List
+from pytorch_lightning import Callback
+from omegaconf import DictConfig
+import hydra
 
 def load_image(path_image: str) -> Image.Image:
     """Load image from harddrive and return 3-channel PIL image.
@@ -28,3 +32,12 @@ def load_checkpoint(model: nn.Module, filename: Path, device: str, key: str='sta
     checkpoint = torch.load(filename, map_location=device)[key]
     return model.load_state_dict(checkpoint)
     
+
+def instantiate_callbacks(callbacks_cfg: DictConfig) -> List[Callback]:
+    """Instantiates callbacks from config."""
+    callbacks: List[Callback] = []
+
+    for (i, callback_elt) in callbacks_cfg.items():
+        callback = hydra.utils.instantiate(callback_elt)
+        callbacks.append(callback)
+    return callbacks
