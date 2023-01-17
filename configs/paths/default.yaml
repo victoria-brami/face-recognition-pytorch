@@ -1,2 +1,2 @@
-root_dir: ../
+root_dir: ".."
 output_dir: ${paths.root_dir}/logs/

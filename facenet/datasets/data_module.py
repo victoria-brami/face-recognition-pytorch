@@ -23,6 +23,8 @@ class FaceTripletsDataModule(pl.LightningDataModule):
         self.save_hyperparameters(logger=False)
         self.train_path = os.path.join(data_dir, "train")
         self.test_path = os.path.join(data_dir, "test")
+        print("Train path", self.train_path, self.test_path)
+        self.train_prop = train_prop
         self.seed = seed
         self.data_train: Optional[LFW] = None
         self.data_val: Optional[LFW] = None
@@ -33,12 +35,12 @@ class FaceTripletsDataModule(pl.LightningDataModule):
         if not self.data_train and not self.data_val and not self.data_test:
             trainset = LFW(self.train_path, transform=None)
             testset = LFW(self.test_path, transform=None)
-            lengths = [int(len(trainset)*self.hparams.train_prop)+1, int(len(trainset)*(1-self.hparams.train_prop))]
+            lengths = [int(len(trainset)*self.train_prop)+1, int(len(trainset)*(1-self.train_prop))]
             self.data_test = testset
             self.data_train, self.data_val = random_split(
                 dataset=trainset,
                 lengths=lengths,
-                generator=Generator().manual_seed(self.hparams.seed),
+                generator=Generator().manual_seed(self.seed),
             )
             print("Train Set length: {}".format(len(self.data_train)))
             print("Val Set length: {}".format(len(self.data_val)))
