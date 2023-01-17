@@ -18,7 +18,7 @@ class LFW(Dataset):
 
         self._person_paths = get_person_image_paths(path)
         self._persons = self._person_paths.keys()
-        self._persons_positive = get_persons_with_at_least_k_images(self.person_paths, 2)
+        self._persons_positive = get_persons_with_at_least_k_images(self._person_paths, 2)
         self.transform = transform or transforms.Compose([
                                                             transforms.CenterCrop(size=(150, 150)),
                                                             transforms.Resize((224,224)),  # resized to the network's required input size
@@ -46,10 +46,10 @@ class LFW(Dataset):
         anchor, positive = getattr(self._persons_paths, pos_name)[[anchor_item, positive_item]]
 
         # select randomly the negative id
-        neg_names = deepcopy(*self.persons)
+        neg_names = deepcopy(*self._persons)
         neg_names.remove(pos_name)
         neg_name = np.random.choice(neg_names, 1)[0]
-        nb_neg_images = len(getattr(self.person_paths, neg_name))
+        nb_neg_images = len(getattr(self._person_paths, neg_name))
         neg_id = np.random.choice(nb_neg_images, 1, replace=False)
         negative =  getattr(self._person_paths, neg_name)[neg_id]
 
@@ -73,7 +73,7 @@ class LFW(Dataset):
         )
 
     def __len__(self):
-        return len(self.persons_positive)
+        return len(self._persons_positive)
 
 
 if __name__ == "__main__":
