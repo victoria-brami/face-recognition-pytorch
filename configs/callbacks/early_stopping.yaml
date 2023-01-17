@@ -3,4 +3,4 @@ early_stopping:
   mode: "max"
   monitor: "val/acc"
   patience: 5
-   min_delta: 0.01
+  min_delta: 0.01
