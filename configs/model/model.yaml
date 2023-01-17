@@ -7,10 +7,10 @@ optimizer:
   weight_decay: 1e-5
 
 scheduler:
-  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _target_: torch.optim.lr_scheduler.StepLR
   _partial_: true
   mode: min
-  factor: 0.1
+  factor: 0.9
   patience: 5
 
 net:
