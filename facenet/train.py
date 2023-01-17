@@ -4,7 +4,7 @@ from pytorch_lightning import Trainer, seed_everything, Callback, LightningModul
 from pytorch_lightning.loggers import LightningLoggerBase
 import logging
 from omegaconf import DictConfig
-from ..utils import instantiate_callbacks
+from .utils import instantiate_callbacks
 
 log = logging.getLogger(__name__)
 
