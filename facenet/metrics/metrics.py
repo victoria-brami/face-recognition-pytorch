@@ -53,8 +53,8 @@ class EvaluationMetric(Metric):
         super().__init__()
         self._accuracy_metric = AccuracyMetric(margin=0.0)
         self._precision_recall_metric = PrecisionRecallMetric(threshold=threshold)
-        self.add_state("accuracy", default=Tensor(0.), dist_reduce_fx="sum")
-        self.add_state("threshold", default=threshold, dist_reduce_fx="sum")
+        self.add_state("accuracy", default=Tensor(0.))
+        self.add_state("threshold", default=threshold)
         self.add_state("VAL", default=Tensor(0.), dist_reduce_fx="sum")
         self.add_state("FAR", default=Tensor(0.), dist_reduce_fx="sum")
         self.metric_list = ["Acc", "threshold", "VAL", "FAR"]
