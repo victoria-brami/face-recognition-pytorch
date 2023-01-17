@@ -23,7 +23,6 @@ class FaceTripletsDataModule(pl.LightningDataModule):
         self.save_hyperparameters(logger=False)
         self.train_path = os.path.join(data_dir, "train")
         self.test_path = os.path.join(data_dir, "test")
-        print("Train path", self.train_path, self.test_path)
         self.train_prop = train_prop
         self.seed = seed
         self.data_train: Optional[LFW] = None
@@ -42,6 +41,7 @@ class FaceTripletsDataModule(pl.LightningDataModule):
                 lengths=lengths,
                 generator=Generator().manual_seed(self.seed),
             )
+            print("Train path", self.train_path, self.test_path)
             print("Train Set length: {}".format(len(self.data_train)))
             print("Val Set length: {}".format(len(self.data_val)))
             print("Test Set length: {}".format(len(self.data_test)))
