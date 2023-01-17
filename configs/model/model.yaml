@@ -18,8 +18,8 @@ net:
   embedding_dim: 128
   modelname: resnet18
 
-metrics:
-  train_margin: 0.2
-  val_margin: 0.2
-  test_margin: 0.2
-  threshold: 1.
+
+train_margin: 0.2
+val_margin: 0.2
+test_margin: 0.2
+threshold: 1.
