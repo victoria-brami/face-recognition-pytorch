@@ -1,6 +1,7 @@
 import hydra
 from typing import List
-from pytorch_lightning import Trainer, Callback, LightningModule, LightningLoggerBase, LightningDataModule
+from pytorch_lightning import Trainer, seed_everything, Callback, LightningModule, LightningDataModule
+from pytorch_lightning.loggers import LightningLoggerBase
 import logging
 from omegaconf import DictConfig, OmegaConf
 
@@ -11,7 +12,7 @@ logging.basicConfig(level=logging.INFO) # can customize format
 
 def train(cfg: DictConfig) -> None:
 
-    pl.seed_everything(cfg.seed)
+    seed_everything(cfg.seed)
 
     log.info(f"Instantiating datamodule <{cfg.data._target_}>")
     datamodule: LightningDataModule = hydra.utils.instantiate(cfg.data)
