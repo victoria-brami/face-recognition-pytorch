@@ -52,7 +52,7 @@ class LFW(Dataset):
         neg_names.remove(pos_name)
         neg_name = np.random.choice(neg_names, 1)[0]
         nb_neg_images = len(self._person_paths[neg_name])
-        neg_id = np.random.choice(nb_neg_images, 1, replace=False)
+        neg_id = np.random.choice(nb_neg_images, 1, replace=False)[0]
         negative =  self._person_paths[neg_name][neg_id]
 
         return anchor, positive, negative
