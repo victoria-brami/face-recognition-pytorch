@@ -13,7 +13,9 @@ class FaceNet(nn.Module):
         self.embedding_dim = embedding_dim
         self.model = self._build_model()
         
+
     def _build_model(self) -> nn.Module:
+
         if self.modelname == 'resnet18':
             model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
         elif self.modelname == 'resnet34':
@@ -31,6 +33,7 @@ class FaceNet(nn.Module):
         model.fc =  nn.Linear(num_ftrs, self.embedding_dim)
         
         return model
+        
         
     def forward(self, x: Tensor) -> Tensor:
         return nn.functional.normalize(self.model(x))

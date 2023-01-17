@@ -10,3 +10,4 @@ logging
 random
 pathlib
 pytorch_lightning
+omegaconf

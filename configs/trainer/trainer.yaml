@@ -1,0 +1,4 @@
+__target__: pytorch_lightning.Trainer
+
+
+epochs: 20

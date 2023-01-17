@@ -1,0 +1,25 @@
+_target_: trainer.FaceNetTrainer
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 1.5e-4
+  weight_decay: 1e-5
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 5
+
+net:
+  _target_: net.FaceNet
+  embedding_dims: 128
+  modelname: 'resnet18'
+
+metrics:
+  train_margin: 0.2
+  val_margin: 0.2
+  test_margin: 0.2
+  threshold: 1.

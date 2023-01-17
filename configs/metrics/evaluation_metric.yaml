@@ -1,0 +1,5 @@
+__target__ : facenet.metrics.EvaluationMetric
+
+
+threshold: 1.
+
