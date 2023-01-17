@@ -29,7 +29,7 @@ class FaceTripletsDataModule(pl.LightningDataModule):
         self.data_test: Optional[LFW] = None
         
         
-    def setup(self) -> None:
+    def setup(self, stage=None) -> None:
         if not self.data_train and not self.data_val and not self.data_test:
             trainset = LFW(self.train_path, transform=None)
             testset = LFW(self.test_path, transform=None)
