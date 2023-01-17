@@ -1,4 +1,4 @@
-_target_: datasets.FaceTripletsDataModule
+_target_: facenet.datasets.FaceTripletsDataModule
 datapath:  "../data/lfw"
 train_path:  "../data/lfw/train"
 test_path:  "../data/lfw/test"
