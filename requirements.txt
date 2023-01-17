@@ -11,3 +11,4 @@ random
 pathlib
 pytorch_lightning
 omegaconf
+wandb
