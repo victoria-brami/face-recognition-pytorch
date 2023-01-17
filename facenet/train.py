@@ -4,6 +4,7 @@ from pytorch_lightning import Trainer, seed_everything, Callback, LightningModul
 from pytorch_lightning.loggers import LightningLoggerBase
 import logging
 from omegaconf import DictConfig
+from ..utils import instantiate_callbacks
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +25,7 @@ def train(cfg: DictConfig) -> None:
     logger:  LightningLoggerBase = hydra.utils.instantiate(cfg.logger)
     log.info(f"Created the logger <{cfg.logger._target_}>")
    
-    callbacks: List[Callback] = hydra.utils.instantiate(cfg.get("callbacks"))
+    callbacks: List[Callback] = instantiate_callbacks(cfg.get("callbacks"))
     log.info(f"Instantiated callbacks <{cfg.callbacks._target_}>")
 
     log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
