@@ -48,7 +48,7 @@ class LFW(Dataset):
 
 
         # select randomly the negative id
-        neg_names = deepcopy(list(self._persons.keys()))
+        neg_names = deepcopy(list(self._persons))
         neg_names.remove(pos_name)
         neg_name = np.random.choice(neg_names, 1)[0]
         nb_neg_images = len(self._person_paths[neg_name])
