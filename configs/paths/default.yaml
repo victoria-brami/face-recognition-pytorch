@@ -1,2 +1,2 @@
-root_dir: ${oc.env:PROJECT_ROOT}
+root_dir: ../
 output_dir: ${paths.root_dir}/logs/
