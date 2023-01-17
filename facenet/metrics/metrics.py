@@ -57,8 +57,6 @@ class EvaluationMetric(Metric):
         self.threshold = threshold
         self.VAR = 0.
         self.FAR = 0.
-        self.add_state("VAL", default=Tensor(0.), dist_reduce_fx="sum")
-        self.add_state("FAR", default=Tensor(0.), dist_reduce_fx="sum")
         self.metric_list = ["accuracy", "threshold", "VAL", "FAR"]
         
     def compute(self):
