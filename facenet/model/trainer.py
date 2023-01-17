@@ -85,10 +85,10 @@ class FaceNetLitModule(pl.LightningModule):
         self.train_acc(a_out, p_out, n_out)
 
         self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/acc", self.train_acc.compute(), on_step=False, on_epoch=True, prog_bar=True)
         self.log("train/worst_loss", self.train_worst_loss, on_step=False, on_epoch=True, prog_bar=True)
 
-        return {"loss": loss}
+        return {"Train loss": loss, "worst loss": self.train_worst_loss, "train acc": self.train_acc.compute()}
 
 
     def validation_step(self, batch: Any, batch_idx: int):
@@ -102,10 +102,10 @@ class FaceNetLitModule(pl.LightningModule):
         self.val_acc(a_out, p_out, n_out)
 
         self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/acc", self.val_acc.compute(), on_step=False, on_epoch=True, prog_bar=True)
         self.log("val/worst_loss", self.val_worst_loss, on_step=False, on_epoch=True, prog_bar=True)
 
-        return {"loss": loss}
+        return {"Val loss": loss, "val worst loss": self.val_worst_loss, "val acc": self.val_acc.compute()}
     
     def validation_epoch_end(self, outputs: List[Any]):
         acc = self.val_acc.compute()  # get current val acc

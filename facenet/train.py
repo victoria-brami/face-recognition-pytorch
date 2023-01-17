@@ -8,7 +8,11 @@ from utils import instantiate_callbacks
 
 log = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.INFO) # can customize format
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%m/%d/%Y %I:%M:%S %p'
+) # can customize format
 
 
 def train(cfg: DictConfig) -> None:
