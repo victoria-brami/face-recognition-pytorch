@@ -3,7 +3,7 @@ from typing import List
 from pytorch_lightning import Trainer, seed_everything, Callback, LightningModule, LightningDataModule
 from pytorch_lightning.loggers import LightningLoggerBase
 import logging
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import DictConfig
 
 log = logging.getLogger(__name__)
 
