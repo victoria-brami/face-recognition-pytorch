@@ -1,5 +1,4 @@
 import pytorch_lightning as pl
-from ..configs import DataConfig
 from .lfw import LFW
 from typing import Optional
 from torch.utils.data import DataLoader, random_split
