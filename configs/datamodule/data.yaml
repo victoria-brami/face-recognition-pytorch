@@ -1,0 +1,9 @@
+_target_: facenet.datasets.FaceTripletsDataModule
+datapath:  "../data/lfw"
+train_path:  "../data/lfw/train"
+test_path:  "../data/lfw/test"
+train_prop: 0.8
+seed: 42
+batch_size: 4
+num_workers: 1
+pin_memory: False
