@@ -59,9 +59,9 @@ class FaceNetLitModule(pl.LightningModule):
         Examples:
             https://pytorch-lightning.readthedocs.io/en/latest/common/lightning_module.html#configure-optimizers
         """
-        optimizer = self.optimizer(params=self.parameters())
+        optimizer = self.hparams.optimizer(params=self.parameters())
         if self.scheduler is not None:
-            scheduler = self.scheduler(optimizer=optimizer)
+            scheduler = self.hparams.scheduler(optimizer=optimizer)
             return {
                 "optimizer": optimizer,
                 "lr_scheduler": {
