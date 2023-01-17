@@ -17,7 +17,7 @@ class LFW(Dataset):
         super().__init__()
 
         self._person_paths = get_person_image_paths(path)
-        self._persons = self.person_paths.keys()
+        self._persons = self._person_paths.keys()
         self._persons_positive = get_persons_with_at_least_k_images(self.person_paths, 2)
         self.transform = transform or transforms.Compose([
                                                             transforms.CenterCrop(size=(150, 150)),
