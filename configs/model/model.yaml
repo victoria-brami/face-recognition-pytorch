@@ -16,7 +16,7 @@ scheduler:
 net:
   _target_: net.FaceNet
   embedding_dims: 128
-  modelname: 'resnet18'
+  modelname: resnet18
 
 metrics:
   train_margin: 0.2

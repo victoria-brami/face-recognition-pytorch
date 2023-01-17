@@ -4,6 +4,7 @@ from typing import Optional
 from torch.utils.data import DataLoader, random_split
 from torch import Generator
 from pathlib import Path
+import os
 
 
 
@@ -20,8 +21,8 @@ class FaceTripletsDataModule(pl.LightningDataModule):
 ) -> None:
         super().__init__()
         self.save_hyperparameters(logger=False)
-        self.train_path = data_dir / "train"
-        self.test_path = data_dir / "test"
+        self.train_path = os.path.join(data_dir, "train")
+        self.test_path = os.path.join(data_dir, "test")
         self.seed = seed
         self.data_train: Optional[LFW] = None
         self.data_val: Optional[LFW] = None
