@@ -9,18 +9,18 @@ class AccuracyMetric(Metric):
     def __init__(self, margin: float) -> None:
         super().__init__()
         self.margin = margin
-        self.add_state("correct", default=Tensor(0), dist_reduce_fx="sum")
-        self.add_state("total", default=Tensor(0), dist_reduce_fx="sum")
+        self.add_state("correct", default=torch.tensor(0), dist_reduce_fx="sum")
+        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
         
     def compute(self) -> float:
-        return self.correct.float() / self.total.float()
+        return self.correct.float() / self.total
     
     def update(self, anchor: Tensor, positive: Tensor, negative: Tensor) -> None:
         pos_dists = F.pairwise_distance(anchor, positive)
         neg_dists = F.pairwise_distance(anchor, negative)
-        pred = (neg_dists - pos_dists - self.margin).cpu().data
-        self.correct += (pred > 0).sum()*1.0
-        self.total += pos_dists.size()[0]
+        pred = (neg_dists - pos_dists - self.margin*torch.ones((pos_dists.shape))).cpu()
+        self.correct += torch.sum(pred > 0)
+        self.total += pos_dists.numel()
         
         
 class PrecisionRecallMetric(Metric):
@@ -32,19 +32,19 @@ class PrecisionRecallMetric(Metric):
     def __init__(self, threshold: float) -> None:
         super().__init__()
         self.threshold = threshold
-        self.add_state("true_pos", default=Tensor(0), dist_reduce_fx="sum")
-        self.add_state("false_pos", default=Tensor(0), dist_reduce_fx="sum")
-        self.add_state("total", default=Tensor(0), dist_reduce_fx="sum")
+        self.add_state("true_pos", default=torch.tensor(0), dist_reduce_fx="sum")
+        self.add_state("false_pos", default=torch.tensor(0), dist_reduce_fx="sum")
+        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
         
     def compute(self, true_pos: bool=True) -> float:
-        return self.true_pos.float() / self.total.float() if true_pos else self.false_pos.float() / self.total.float()
+        return self.true_pos.float() / self.total if true_pos else self.false_pos.float() / self.total
     
     def update(self, anchor: Tensor, positive: Tensor, negative: Tensor) -> None:
         pos_dists = F.pairwise_distance(anchor, positive)
         neg_dists = F.pairwise_distance(anchor, negative)
-        self.true_pos = (pos_dists < self.threshold).sum()*1.0
-        self.false_pos = (neg_dists < self.threshold).sum()*1.0
-        self.total += pos_dists.size()[0]
+        self.true_pos += torch.sum(pos_dists < self.threshold)
+        self.false_pos += torch.sum(neg_dists < self.threshold)
+        self.total += pos_dists.numel()
         
         
 class EvaluationMetric(Metric):
@@ -72,4 +72,26 @@ class EvaluationMetric(Metric):
         
 # Visualiser des jugements de similarité (créer une échelle avec visages très similaires: Jozwik et al. 2022, face dissimilarity judgements...)
     
-    
+if __name__ == '__main__':    
+    import torch 
+    import unittest
+
+    class DatasetTests(unittest.TestCase):
+        def setUp(self):
+            self.acc_metric = AccuracyMetric(margin=0.)
+            self.eval_metric = EvaluationMetric(threshold=1.)
+            self.prec_rec_metric = PrecisionRecallMetric(threshold=1.)
+
+        def test_acc_computation(self):
+            self.acc_metric.reset()
+            a = torch.tensor([1.])
+            b = torch.tensor([1.1])
+            c = torch.tensor([1.2])
+            self.acc_metric.update(a, b, c)
+            print(self.acc_metric.compute())
+            self.assertEqual(self.acc_metric.compute(), 1, "2nd Wrong computation")
+            self.acc_metric.update(a, c, b)
+            print(self.acc_metric.compute())
+            self.assertEqual(self.acc_metric.compute(), 0.5, "3rd Wrong computation")
+           
+    unittest.main(argv=[''], exit=False)
