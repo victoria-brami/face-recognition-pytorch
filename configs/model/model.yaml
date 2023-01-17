@@ -9,8 +9,8 @@ optimizer:
 scheduler:
   _target_: torch.optim.lr_scheduler.StepLR
   _partial_: true
-  factor: 0.9
-  patience: 5
+  gamma: 0.9
+  step_size: 5
 
 net:
   _target_: facenet.model.FaceNet
