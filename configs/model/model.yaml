@@ -14,7 +14,7 @@ scheduler:
   patience: 5
 
 net:
-  _target_: net.FaceNet
+  _target_: facenet.model.FaceNet
   embedding_dims: 128
   modelname: resnet18
 
