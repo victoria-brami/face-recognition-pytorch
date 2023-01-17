@@ -55,9 +55,11 @@ class EvaluationMetric(Metric):
         self._precision_recall_metric = PrecisionRecallMetric(threshold=threshold)
         self.accuracy = 0.
         self.threshold = threshold
+        self.VAR = 0.
+        self.FAR = 0.
         self.add_state("VAL", default=Tensor(0.), dist_reduce_fx="sum")
         self.add_state("FAR", default=Tensor(0.), dist_reduce_fx="sum")
-        self.metric_list = ["Acc", "threshold", "VAL", "FAR"]
+        self.metric_list = ["accuracy", "threshold", "VAL", "FAR"]
         
     def compute(self):
         metrics = {metric: getattr(self, metric) for metric in self.metric_list}
