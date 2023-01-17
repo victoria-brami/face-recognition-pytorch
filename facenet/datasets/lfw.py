@@ -41,7 +41,7 @@ class LFW(Dataset):
         pos_name = list(self._persons_positive)[index]
 
         # select randomly 2 images within the folder
-        nb_pos_images = len(getattr(self._person_paths, pos_name))
+        nb_pos_images = len(self._person_paths[pos_name])
         anchor_item, positive_item = np.random.choice(nb_pos_images, 2, replace=False)
         anchor, positive = getattr(self._persons_paths, pos_name)[[anchor_item, positive_item]]
 
@@ -49,9 +49,9 @@ class LFW(Dataset):
         neg_names = deepcopy(*self._persons)
         neg_names.remove(pos_name)
         neg_name = np.random.choice(neg_names, 1)[0]
-        nb_neg_images = len(getattr(self._person_paths, neg_name))
+        nb_neg_images = len(self._person_paths[neg_name])
         neg_id = np.random.choice(nb_neg_images, 1, replace=False)
-        negative =  getattr(self._person_paths, neg_name)[neg_id]
+        negative =  self._person_paths[neg_name][neg_id]
 
         return anchor, positive, negative
 
