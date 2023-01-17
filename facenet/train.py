@@ -27,9 +27,9 @@ def train(cfg: DictConfig) -> None:
    
     callbacks: List[Callback] = instantiate_callbacks(cfg.get("callbacks"))
     log.info(f"Instantiated callbacks >")
-
-    log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
+    
     trainer: Trainer = hydra.utils.instantiate(cfg.trainer, callbacks=callbacks, logger=logger)
+    log.info(f"Instantiated trainer <{cfg.trainer._target_}>")
 
     if cfg.get("train"):
         log.info("Starting training!")
