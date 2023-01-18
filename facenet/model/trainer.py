@@ -22,12 +22,14 @@ class FaceNetLitModule(pl.LightningModule):
                 threshold: float,
                 optimizer: torch.optim.Optimizer,
                 scheduler: torch.optim.lr_scheduler,
+                default_logger: logging.Logger
                  ) -> None:
 
         super().__init__()
 
         self.save_hyperparameters(logger=False)
         self.net = net
+        self.default_logger = default_logger
         self.train_margin = train_margin
         self.val_margin = val_margin
         self.test_margin = test_margin
@@ -102,7 +104,7 @@ class FaceNetLitModule(pl.LightningModule):
             f'Acc {self.train_acc.compute():.4f}'
             ]
         if batch_idx % self.trainer.log_every_n_steps == 0:
-            self.logger.debug(' | '.join(msgs))
+            self.default_logger.debug(' | '.join(msgs))
 
         return {"loss": loss, "acc": self.train_acc.compute()}
 
@@ -160,4 +162,4 @@ class FaceNetLitModule(pl.LightningModule):
             f'VAR :  {metrics_dict["VAR"]:.4f}',
             f'FAR {metrics_dict["FAR"]:.4f}'
             ]
-        self.logger.info(' | '.join(msgs))
+        self.default_logger.info(' | '.join(msgs))

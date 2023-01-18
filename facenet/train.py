@@ -23,7 +23,7 @@ def train(cfg: DictConfig) -> None:
     datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule)
     log.info(f"Instantiated datamodule <{cfg.datamodule._target_}>")
 
-    model: LightningModule = hydra.utils.instantiate(cfg.model)
+    model: LightningModule = hydra.utils.instantiate(cfg.model, default_logger=log)
     log.info(f"Instantiated model <{cfg.model._target_}>")
 
     logger: Logger = hydra.utils.instantiate(cfg.logger)
