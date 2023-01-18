@@ -9,12 +9,12 @@ import logging
 import sys
 
 
-default_logger = logging.getLogger('lightning')
-default_logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('[%(levelname)8s] %(message)s')
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setFormatter(formatter)
-default_logger.addHandler(console_handler)
+# default_logger = logging.getLogger('lightning')
+# default_logger.setLevel(logging.DEBUG)
+# formatter = logging.Formatter('[%(levelname)8s] %(message)s')
+# console_handler = logging.StreamHandler(sys.stdout)
+# console_handler.setFormatter(formatter)
+# default_logger.addHandler(console_handler)
 
 
 class FaceNetLitModule(pl.LightningModule):
@@ -105,7 +105,7 @@ class FaceNetLitModule(pl.LightningModule):
             f'Acc {self.train_acc.compute():.4f}'
             ]
         if batch_idx % self.trainer.log_every_n_steps == 0:
-            default_logger.debug(' | '.join(msgs))
+            self.logger.debug(' | '.join(msgs))
 
         return {"loss": loss, "acc": self.train_acc.compute()}
 
