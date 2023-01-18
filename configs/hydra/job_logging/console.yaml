@@ -24,7 +24,7 @@ handlers:
     stream: ext://sys.stdout
 
 root:
-    level: ${logger_level}
+    level: debug
     handlers:
     - console
 
