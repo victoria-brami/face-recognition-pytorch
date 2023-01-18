@@ -43,9 +43,6 @@ class PrecisionRecallMetric(Metric):
     def update(self, anchor: Tensor, positive: Tensor, negative: Tensor) -> None:
         pos_dists = F.pairwise_distance(anchor, positive)
         neg_dists = F.pairwise_distance(anchor, negative)
-        print(pos_dists)
-        print(type(self.threshold))
-        print(torch.ones(pos_dists.shape))
         self.true_pos += torch.sum(pos_dists < self.threshold[0]*torch.ones(pos_dists.shape))
         self.false_pos += torch.sum(neg_dists < self.threshold[0]*torch.ones(neg_dists.shape))
         self.total += pos_dists.numel()
@@ -61,12 +58,12 @@ class EvaluationMetric(Metric):
         self.threshold = threshold
         self.VAR = 0.
         self.FAR = 0.
-        self.metric_list = ["accuracy", "threshold", "VAL", "FAR"]
+        self.metric_list = ["accuracy", "threshold", "VAR", "FAR"]
         
     def compute(self):
         metrics = {metric: getattr(self, metric) for metric in self.metric_list}
         metrics["accuracy"] = self._accuracy_metric.compute()
-        metrics["VAL"] = self._precision_recall_metric.compute()["TP"]
+        metrics["VAR"] = self._precision_recall_metric.compute()["TP"]
         metrics["FAR"] = self._precision_recall_metric.compute()["FP"]
         return {**metrics}
     
