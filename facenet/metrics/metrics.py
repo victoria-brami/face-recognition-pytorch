@@ -43,8 +43,8 @@ class PrecisionRecallMetric(Metric):
     def update(self, anchor: Tensor, positive: Tensor, negative: Tensor) -> None:
         pos_dists = F.pairwise_distance(anchor, positive)
         neg_dists = F.pairwise_distance(anchor, negative)
-        self.true_pos += torch.sum(pos_dists < self.threshold)
-        self.false_pos += torch.sum(neg_dists < self.threshold)
+        self.true_pos += torch.sum(pos_dists - self.threshold < 0)
+        self.false_pos += torch.sum(neg_dists - self.threshold < 0)
         self.total += pos_dists.numel()
         
         
