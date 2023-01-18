@@ -37,14 +37,14 @@ class PrecisionRecallMetric(Metric):
         self.add_state("false_pos", default=torch.tensor(0), dist_reduce_fx="sum")
         self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
         
-    def compute(self, true_pos: bool=True) -> float:
-        return self.true_pos.float() / self.total if true_pos else self.false_pos.float() / self.total
+    def compute(self) -> float:
+        return {"TP": self.true_pos.float() / self.total,  "FP": self.false_pos.float() / self.total}
     
     def update(self, anchor: Tensor, positive: Tensor, negative: Tensor) -> None:
         pos_dists = F.pairwise_distance(anchor, positive)
         neg_dists = F.pairwise_distance(anchor, negative)
-        self.true_pos += torch.sum(pos_dists - self.threshold < 0)
-        self.false_pos += torch.sum(neg_dists - self.threshold < 0)
+        self.true_pos += torch.sum(pos_dists - self.threshold*torch.ones(pos_dists.shape) < 0)
+        self.false_pos += torch.sum(neg_dists - self.threshold*torch.ones(neg_dists.shape) < 0)
         self.total += pos_dists.numel()
         
         
@@ -63,8 +63,8 @@ class EvaluationMetric(Metric):
     def compute(self):
         metrics = {metric: getattr(self, metric) for metric in self.metric_list}
         metrics["accuracy"] = self._accuracy_metric.compute()
-        metrics["VAL"] = self._precision_recall_metric.compute(true_pos=True)
-        metrics["FAR"] = self._precision_recall_metric.compute(true_pos=False)
+        metrics["VAL"] = self._precision_recall_metric.compute()["TP"]
+        metrics["FAR"] = self._precision_recall_metric.compute()["FP"]
         return {**metrics}
     
     def update(self, anchor: Tensor, positive: Tensor, negative: Tensor) -> None:
@@ -82,6 +82,24 @@ if __name__ == '__main__':
             self.acc_metric = AccuracyMetric(margin=0.)
             self.eval_metric = EvaluationMetric(threshold=1.)
             self.prec_rec_metric = PrecisionRecallMetric(threshold=1.)
+            
+        def test_prec_recall_computation(self):
+            self.prec_rec_metric.reset()
+            a = torch.tensor([1.])
+            b = torch.tensor([1.1])
+            c = torch.tensor([4.2])
+            self.prec_rec_metric.update(a, b, c)
+            print(self.prec_rec_metric.compute())
+            self.prec_rec_metric.update(a, b, c)
+            print(self.prec_rec_metric.compute())
+            self.assertEqual(self.prec_rec_metric.compute()['TP'], 1, "2nd Wrong computation")
+            self.assertEqual(self.prec_rec_metric.compute()['FP'], 0, "3rd Wrong computation")
+            self.prec_rec_metric.update(a, c, b)
+            print(self.prec_rec_metric.compute() )
+            self.assertEqual(self.prec_rec_metric.compute()['FP'], 1 / 3, "3rd Wrong computation")
+            self.assertEqual(self.prec_rec_metric.compute()['TP'], 2 / 3, "3rd Wrong computation")
+            self.prec_rec_metric.update(a, c, b)
+            print("Last",self.prec_rec_metric.compute())
 
         def test_acc_computation(self):
             self.acc_metric.reset()
