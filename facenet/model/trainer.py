@@ -9,12 +9,7 @@ import logging
 import sys
 
 
-default_logger = logging.getLogger('lightning')
-default_logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('[%(levelname)8s] %(message)s')
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setFormatter(formatter)
-default_logger.addHandler(console_handler)
+
 
 
 class FaceNetLitModule(pl.LightningModule):
@@ -165,4 +160,4 @@ class FaceNetLitModule(pl.LightningModule):
             f'VAR :  {metrics_dict["VAR"]:.4f}',
             f'FAR {metrics_dict["FAR"]:.4f}'
             ]
-        default_logger.info(' | '.join(msgs))
+        self.logger.info(' | '.join(msgs))

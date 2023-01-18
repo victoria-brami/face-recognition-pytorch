@@ -5,14 +5,14 @@ from pytorch_lightning.loggers.logger import Logger
 import logging
 from omegaconf import DictConfig
 from utils import instantiate_callbacks
+import sys
 
 log = logging.getLogger('lightning')
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%m/%d/%Y %I:%M:%S %p'
-) # can customize format
+log.setLevel(logging.DEBUG)
+formatter = logging.Formatter('[%(levelname)8s] %(message)s')
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setFormatter(formatter)
+log.addHandler(console_handler)
 
 
 def train(cfg: DictConfig) -> None:
@@ -34,7 +34,7 @@ def train(cfg: DictConfig) -> None:
     
     trainer: Trainer = hydra.utils.instantiate(cfg.trainer, 
                                                callbacks=callbacks, 
-                                               logger=None) #logger
+                                               logger=log) #logger
     log.info(f"Instantiated trainer <{cfg.trainer._target_}>")
 
     if cfg.get("train"):
