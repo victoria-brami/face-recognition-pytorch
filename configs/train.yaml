@@ -6,6 +6,8 @@ defaults:
   - callbacks: default.yaml
   - logger: wandb.yaml # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
   - paths: default.yaml
+  - override hydra/job_logging: console.yaml # custom
+  - override hydra/hydra_logging: console.yaml
 
 
 task_name: "train"
