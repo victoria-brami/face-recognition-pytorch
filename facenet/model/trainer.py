@@ -157,7 +157,7 @@ class FaceNetLitModule(pl.LightningModule):
         msgs = [ f'[TEST]',
             f'Epoch {self.current_epoch}/{self.trainer.max_epochs}',
             f'Loss {self.test_loss.compute():.4f}',
-            f'Thresh. {metrics_dict["threshold"]:.4f}',
+            f'Thresh. {metrics_dict["threshold"][0]:.4f}',
             f'Acc : {metrics_dict["accuracy"]:.4f}',
             f'VAR :  {metrics_dict["VAR"]:.4f}',
             f'FAR {metrics_dict["FAR"]:.4f}'
