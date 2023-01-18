@@ -46,8 +46,8 @@ class PrecisionRecallMetric(Metric):
         print(pos_dists)
         print(type(self.threshold))
         print(torch.ones(pos_dists.shape))
-        self.true_pos += torch.sum(pos_dists < self.threshold*torch.ones(pos_dists.shape))
-        self.false_pos += torch.sum(neg_dists < self.threshold*torch.ones(neg_dists.shape))
+        self.true_pos += torch.sum(pos_dists < self.threshold[0]*torch.ones(pos_dists.shape))
+        self.false_pos += torch.sum(neg_dists < self.threshold[0]*torch.ones(neg_dists.shape))
         self.total += pos_dists.numel()
         
         
