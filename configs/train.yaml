@@ -9,11 +9,11 @@ defaults:
   - override hydra/job_logging: console # custom
 
 
-task_name: "test"
+task_name: "train"
 
 checkpoint_path: null
 
-train: False
+train: True
 
 test: True
 
