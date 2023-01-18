@@ -41,6 +41,7 @@ class FaceNetLitModule(pl.LightningModule):
         
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()
+        self.test_loss = MeanMetric()
 
         self.train_worst_loss = MaxMetric()
         self.val_worst_loss = MaxMetric()
@@ -92,7 +93,7 @@ class FaceNetLitModule(pl.LightningModule):
         self.train_worst_loss(loss)
         self.train_acc(a_out, p_out, n_out)
 
-        self.log("train/loss", loss, on_step=False, on_epoch=True, prog_bar=False)
+        self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=False)
         self.log("train/acc", self.train_acc.compute(), on_step=False, on_epoch=True, prog_bar=False)
         self.log("train/worst_loss", self.train_worst_loss, on_step=False, on_epoch=True, prog_bar=False)
 
@@ -118,9 +119,11 @@ class FaceNetLitModule(pl.LightningModule):
         self.val_loss(loss)
         self.val_worst_loss(loss)
         self.val_acc(a_out, p_out, n_out)
+        self.val_low_acc(a_out, p_out, n_out)
 
         self.log("val/loss", self.val_loss, on_epoch=True, prog_bar=True)
         self.log("val/acc", self.val_acc.compute(),  on_epoch=True, prog_bar=True)
+        self.log("val/low_acc", self.val_low_acc.compute(),  on_epoch=True, prog_bar=True)
         self.log("val/worst_loss", self.val_worst_loss,  on_epoch=True, prog_bar=True)
 
         return {"loss": loss,  "acc": self.val_acc.compute()}
