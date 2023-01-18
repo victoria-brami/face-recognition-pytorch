@@ -34,7 +34,7 @@ def train(cfg: DictConfig) -> None:
     
     trainer: Trainer = hydra.utils.instantiate(cfg.trainer, 
                                                callbacks=callbacks, 
-                                               logger=None) #logger
+                                               logger=logger) #logger
     log.info(f"Instantiated trainer <{cfg.trainer._target_}>")
 
     if cfg.get("train"):

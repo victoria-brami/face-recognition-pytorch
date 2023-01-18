@@ -11,7 +11,7 @@ defaults:
 
 task_name: "train"
 
-checkpoint_path: null
+checkpoint_path: "checkpoints"
 
 train: True
 
