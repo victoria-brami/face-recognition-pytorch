@@ -5,7 +5,8 @@ from torchvision import transforms
 from pathlib import Path
 import numpy as np
 from copy import deepcopy
-
+from ..model import FaceNet
+import torch
 
 RGB_MEAN = [ 0.485, 0.456, 0.406 ]
 RGB_STD = [ 0.229, 0.224, 0.225 ]
@@ -13,15 +14,13 @@ RGB_STD = [ 0.229, 0.224, 0.225 ]
 
 class LFW(Dataset):
 
-    def __init__(self, path: Path, transform: transforms.Compose=None) -> None:
+    def __init__(self, path: Path, facenet: FaceNet, transform: transforms.Compose=None) -> None:
         super().__init__()
-
+        self.facenet = facenet
         self._person_paths = get_person_image_paths(path)
         self._persons = self._person_paths.keys()
         self._persons_positive = get_persons_with_at_least_k_images(self._person_paths, 2)
-        self.transform = transform or transforms.Compose([
-                                                            transforms.CenterCrop(size=(150, 150)),
-                                                            transforms.Resize((224,224)),  # resized to the network's required input size
+        self.transform = transform or transforms.Compose([  transforms.CenterCrop(size=(150, 150)),
                                                             transforms.ToTensor(),
                                                             transforms.Normalize(mean = RGB_MEAN,
                                                                                 std = RGB_STD),
@@ -54,6 +53,15 @@ class LFW(Dataset):
         nb_neg_images = len(self._person_paths[neg_name])
         neg_id = np.random.choice(nb_neg_images, 1, replace=False)[0]
         negative =  self._person_paths[neg_name][neg_id]
+        
+        dist_pos = torch.linalg.norm(self.facenet(anchor) - self.facenet(positive))
+        dist_neg = torch.linalg.norm(self.facenet(anchor) - self.facenet(negative))
+        while ( dist_pos**2 > dist_neg**2):
+            neg_name = np.random.choice(neg_names, 1)[0]
+            nb_neg_images = len(self._person_paths[neg_name])
+            neg_id = np.random.choice(nb_neg_images, 1, replace=False)[0]
+            negative =  self._person_paths[neg_name][neg_id]
+            dist_neg = torch.linalg.norm(self.facenet(anchor) - self.facenet(negative))
 
         return anchor, positive, negative
 

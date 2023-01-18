@@ -22,6 +22,7 @@ class FaceNetLitModule(pl.LightningModule):
                 threshold: float,
                 optimizer: torch.optim.Optimizer,
                 scheduler: torch.optim.lr_scheduler,
+                checkpoint: str,
                 default_logger: logging.Logger
                  ) -> None:
 
@@ -29,6 +30,8 @@ class FaceNetLitModule(pl.LightningModule):
 
         self.save_hyperparameters(logger=False)
         self.net = net
+        if checkpoint:
+            self.net.load_state_dict(torch.load(checkpoint))
         self.default_logger = default_logger
         self.train_margin = train_margin
         self.val_margin = val_margin

@@ -19,7 +19,7 @@ class FaceNet(nn.Module):
         if self.modelname == 'resnet18':
             model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
         elif self.modelname == 'resnet34':
-            model = models.resnet50(weights=models.ResNet34_Weights.DEFAULT)
+            model = models.resnet34(weights=models.ResNet34_Weights.DEFAULT)
         elif self.modelname == 'resnet50':
             model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
         elif self.modelname == 'resnet101':
