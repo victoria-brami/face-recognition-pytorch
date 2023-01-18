@@ -9,12 +9,12 @@ import logging
 import sys
 
 
-# default_logger = logging.getLogger('lightning')
-# default_logger.setLevel(logging.DEBUG)
-# formatter = logging.Formatter('[%(levelname)8s] %(message)s')
-# console_handler = logging.StreamHandler(sys.stdout)
-# console_handler.setFormatter(formatter)
-# default_logger.addHandler(console_handler)
+default_logger = logging.getLogger('lightning')
+default_logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('[%(levelname)8s] %(message)s')
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setFormatter(formatter)
+default_logger.addHandler(console_handler)
 
 
 class FaceNetLitModule(pl.LightningModule):
@@ -55,6 +55,8 @@ class FaceNetLitModule(pl.LightningModule):
     def on_train_start(self):
         # by default lightning executes validation step sanity checks before training starts,
         # so we need to make sure val_acc_best doesn't store accuracy from these checks
+        self.train_acc.reset()
+        self.val_acc.reset()
         self.val_low_acc.reset()
         self.train_worst_loss.reset()
 
@@ -145,7 +147,22 @@ class FaceNetLitModule(pl.LightningModule):
         self.test_loss(loss)
         self.test_acc(a_out, p_out, n_out)
 
+        
         self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
+        #self.log("test/acc", metrics_dict["accuracy"], on_step=False, on_epoch=True, prog_bar=True)
        
         return {"loss": loss}
+
+    def test_epoch_end(self, outputs: List[Any]):
+
+        metrics_dict = self.test_acc.compute()
+
+        msgs = [ f'[TEST]',
+            f'Epoch {self.current_epoch}/{self.trainer.max_epochs}',
+            f'Loss {self.test_loss.compute():.4f}',
+            f'Thresh. {metrics_dict["threshold"]:.4f}',
+            f'Acc : {metrics_dict["accuracy"]:.4f}',
+            f'VAR :  {metrics_dict["VAR"]:.4f}',
+            f'FAR {metrics_dict["FAR"]:.4f}'
+            ]
+        default_logger.info(' | '.join(msgs))
