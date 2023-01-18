@@ -26,7 +26,7 @@ handlers:
     stream: ext://sys.stdout
 
 root:
-    level: debug
+    level: DEBUG
     handlers:
     - console
 
