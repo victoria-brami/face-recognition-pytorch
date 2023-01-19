@@ -1,0 +1,3 @@
+_target_: facenet.model.FaceNet
+embedding_dim: ${model.net.embedding_dim}
+modelname: ${model.net.modelname}

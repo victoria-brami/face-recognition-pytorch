@@ -14,7 +14,10 @@ RGB_STD = [ 0.229, 0.224, 0.225 ]
 
 class LFW(Dataset):
 
-    def __init__(self, path: Path, facenet: FaceNet, transform: transforms.Compose=None) -> None:
+    def __init__(self, 
+                 path: Path, 
+                 facenet: FaceNet, 
+                 transform: transforms.Compose=None) -> None:
         super().__init__()
         self.facenet = facenet
         self._person_paths = get_person_image_paths(path)

@@ -6,6 +6,7 @@ from typing import List
 from pytorch_lightning import Callback
 from omegaconf import DictConfig
 import hydra
+from collections import OrderedDict
 
 def load_image(path_image: str) -> Image.Image:
     """Load image from harddrive and return 3-channel PIL image.
@@ -15,6 +16,15 @@ def load_image(path_image: str) -> Image.Image:
         Image.Image: loaded image
     """
     return Image.open(path_image).convert('RGB')
+
+def instantiate_callbacks(callbacks_cfg: DictConfig) -> List[Callback]:
+    """Instantiates callbacks from config."""
+    callbacks: List[Callback] = []
+
+    for (i, callback_elt) in callbacks_cfg.items():
+        callback = hydra.utils.instantiate(callback_elt)
+        callbacks.append(callback)
+    return callbacks
 
 
 def load_checkpoint(model: nn.Module, filename: Path, device: str, key: str='state_dict') -> nn.Module:
@@ -33,11 +43,17 @@ def load_checkpoint(model: nn.Module, filename: Path, device: str, key: str='sta
     return model.load_state_dict(checkpoint)
     
 
-def instantiate_callbacks(callbacks_cfg: DictConfig) -> List[Callback]:
-    """Instantiates callbacks from config."""
-    callbacks: List[Callback] = []
+def rename_weight_dict_keys(model: nn.Module, checkpoint: OrderedDict) ->  None:
+    """Rename the checkpoint weights keys so that they match with the new model
 
-    for (i, callback_elt) in callbacks_cfg.items():
-        callback = hydra.utils.instantiate(callback_elt)
-        callbacks.append(callback)
-    return callbacks
+    Args:
+        model (nn.Module): model to which we want to load the new weights
+        checkpoint (OrderedDict): contains the weights we want to load, but the wrong keys
+
+    Returns:
+        OrderedDict: checkpoint file with updated keys
+    """
+    weights_dict = OrderedDict()
+    for key, value in zip(model.state_dict().keys(), checkpoint.values()):
+        weights_dict[key] = value
+    model.load_state_dict(weights_dict)

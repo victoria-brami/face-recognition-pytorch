@@ -1,6 +1,7 @@
 defaults:
   - _self_
   - model: model.yaml
+  - model_for_data: default.yaml
   - datamodule: data.yaml
   - trainer: trainer.yaml
   - callbacks: default.yaml

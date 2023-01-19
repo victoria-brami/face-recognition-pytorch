@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader, random_split
 from torch import Generator
 from pathlib import Path
 import os
-
+from ..model import FaceNet
 
 
 
@@ -17,6 +17,7 @@ class FaceTripletsDataModule(pl.LightningDataModule):
     seed: int,
     batch_size: int, 
     num_workers: int, 
+    facenet: FaceNet, 
     pin_memory: False
 ) -> None:
         super().__init__()
@@ -25,6 +26,7 @@ class FaceTripletsDataModule(pl.LightningDataModule):
         self.test_path = os.path.join(data_dir, "test")
         self.train_prop = train_prop
         self.seed = seed
+        self.facenet = facenet
         self.data_train: Optional[LFW] = None
         self.data_val: Optional[LFW] = None
         self.data_test: Optional[LFW] = None
@@ -32,8 +34,9 @@ class FaceTripletsDataModule(pl.LightningDataModule):
         
     def setup(self, stage=None) -> None:
         if not self.data_train and not self.data_val and not self.data_test:
-            trainset = LFW(self.train_path, transform=None)
-            testset = LFW(self.test_path, transform=None)
+            self.facenet.eval()
+            trainset = LFW(self.train_path, self.facenet, transform=None)
+            testset = LFW(self.test_path, self.facenet, transform=None)
             lengths = [int(len(trainset)*self.train_prop)+1, int(len(trainset)*(1-self.train_prop))]
             self.data_test = testset
             self.data_train, self.data_val = random_split(
