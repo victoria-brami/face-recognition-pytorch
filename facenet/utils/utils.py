@@ -54,6 +54,7 @@ def rename_weight_dict_keys(model: nn.Module, checkpoint: OrderedDict) ->  None:
         OrderedDict: checkpoint file with updated keys
     """
     weights_dict = OrderedDict()
-    for key, value in zip(model.state_dict().keys(), checkpoint.values()):
+    for key, ch_k, value in zip(model.state_dict().keys(), checkpoint.keys(), checkpoint.values()):
+        print(key, ch_k)
         weights_dict[key] = value
     model.load_state_dict(weights_dict)

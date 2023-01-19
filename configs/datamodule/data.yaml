@@ -4,5 +4,5 @@ data_dir: ${paths.root_dir}/data/lfw
 train_prop: 0.8
 seed: 42
 batch_size: 4
-num_workers: 1
+num_workers: 0
 pin_memory: False

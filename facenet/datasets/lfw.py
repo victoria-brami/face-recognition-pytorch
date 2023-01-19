@@ -57,17 +57,23 @@ class LFW(Dataset):
         neg_id = np.random.choice(nb_neg_images, 1, replace=False)[0]
         negative =  self._person_paths[neg_name][neg_id]
         
-        dist_pos = torch.linalg.norm(self.facenet(anchor) - self.facenet(positive))
-        dist_neg = torch.linalg.norm(self.facenet(anchor) - self.facenet(negative))
+        print("Got Item before facenet")
+        anchor_image = self.transform(load_image(anchor))
+        positive_image = self.transform(load_image(positive))
+        negative_image = self.transform(load_image(negative))
+        dist_pos = torch.linalg.norm(self.facenet(anchor_image) - self.facenet(positive_image))
+        dist_neg = torch.linalg.norm(self.facenet(anchor_image) - self.facenet(negative_image))
         
         iteration = 0
         while ( dist_pos**2 > dist_neg**2) and iteration < 10:
+            print("Got Item in while")
             neg_name = np.random.choice(neg_names, 1)[0]
             nb_neg_images = len(self._person_paths[neg_name])
             neg_id = np.random.choice(nb_neg_images, 1, replace=False)[0]
             negative =  self._person_paths[neg_name][neg_id]
-            dist_neg = torch.linalg.norm(self.facenet(anchor) - self.facenet(negative))
-            iteration += 1
+            negative_image = self.transform(load_image(negative))
+            dist_neg = torch.linalg.norm(self.facenet(anchor_image) - self.facenet(negative_image))
+            #iteration += 1
 
         return anchor, positive, negative
 
