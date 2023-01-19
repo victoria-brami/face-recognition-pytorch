@@ -4,3 +4,7 @@ checkpoints/
 logs/
 scripts/
 *.egg-info
+*.zip
+build/
+dist/
+outputs/
