@@ -48,7 +48,6 @@ class LFW(Dataset):
         anchor = self._person_paths[pos_name][anchor_item]
         positive = self._person_paths[pos_name][positive_item]
 
-
         # select randomly the negative id
         neg_names = deepcopy(list(self._persons))
         neg_names.remove(pos_name)
