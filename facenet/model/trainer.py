@@ -1,8 +1,8 @@
 import pytorch_lightning as pl
 from . import FaceNet
-from ..losses import TripletLoss
+from .losses import TripletLoss
 import torch
-from ..metrics import EvaluationMetric, AccuracyMetric
+from .metrics import EvaluationMetric, AccuracyMetric
 from torchmetrics import MeanMetric, MaxMetric
 from typing import Any, List
 import logging
