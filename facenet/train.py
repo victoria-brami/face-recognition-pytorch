@@ -6,7 +6,7 @@ import logging
 from omegaconf import DictConfig
 from utils import instantiate_callbacks, load_checkpoint, rename_weight_dict_keys
 import sys
-from model import FaceNet
+from facenet.model import FaceNet
 
 log = logging.getLogger('lightning')
 log.setLevel(logging.DEBUG)
