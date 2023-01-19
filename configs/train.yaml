@@ -12,7 +12,8 @@ defaults:
 
 task_name: "train"
 
-checkpoint_path: "checkpoints/epoch_005.ckpt"
+checkpoint_data_path: "checkpoints/epoch_007.ckpt"
+checkpoint_path: null
 
 train: True
 

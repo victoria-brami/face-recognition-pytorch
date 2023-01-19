@@ -25,9 +25,9 @@ def train(cfg: DictConfig) -> None:
     log.info(f"Instantiated model <{cfg.model._target_}>")
     
     data_model: FaceNet = hydra.utils.instantiate(cfg.model_for_data)
-    if cfg.checkpoint_path:
+    if cfg.checkpoint_data_path:
         import torch
-        checkpoint = torch.load(cfg.checkpoint_path, map_location=cfg.trainer.accelerator)["state_dict"]
+        checkpoint = torch.load(cfg.checkpoint_data_path, map_location=cfg.trainer.accelerator)["state_dict"]
         rename_weight_dict_keys(data_model, checkpoint)
     
     datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule, facenet=data_model)
