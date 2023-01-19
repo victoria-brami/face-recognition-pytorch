@@ -4,9 +4,8 @@ from pytorch_lightning import Trainer, seed_everything, Callback, LightningModul
 from pytorch_lightning.loggers.logger import Logger
 import logging
 from omegaconf import DictConfig
-from utils import instantiate_callbacks, load_checkpoint, rename_weight_dict_keys
+from utils import instantiate_callbacks
 import sys
-from facenet.model import FaceNet
 
 log = logging.getLogger('lightning')
 log.setLevel(logging.DEBUG)
@@ -23,16 +22,8 @@ def train(cfg: DictConfig) -> None:
 
     model: LightningModule = hydra.utils.instantiate(cfg.model, default_logger=log)
     log.info(f"Instantiated model <{cfg.model._target_}>")
-    
-    data_model: FaceNet = hydra.utils.instantiate(cfg.model_for_data)
-    if cfg.checkpoint_path:
-        import torch
-        checkpoint = torch.load(cfg.checkpoint_path, map_location=cfg.trainer.accelerator)["state_dict"]
-        rename_weight_dict_keys(data_model, checkpoint)
-    
-    datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule, facenet=data_model)
+    datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule, model=model.net)
     log.info(f"Instantiated datamodule <{cfg.datamodule._target_}>")
-    
     logger: Logger = hydra.utils.instantiate(cfg.logger)
     log.info(f"Created the logger <{cfg.logger._target_}>")
    
