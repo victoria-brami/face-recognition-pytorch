@@ -13,3 +13,4 @@ pytorch_lightning
 omegaconf
 wandb
 rich
+colorlog
