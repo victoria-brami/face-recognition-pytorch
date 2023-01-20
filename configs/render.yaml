@@ -1,0 +1,8 @@
+checkpoint_path : "checkpoints/epoch_008.ckpt"
+
+device: "cpu"
+
+image_one_path: "data/lfw/test/Alvaro_Noboa/Alvaro_Noboa_0003.jpg"
+image_two_path: "data/lfw/test/Dick_Clark/Dick_Clark_0002.jpg"
+
+save_folder: "outputs"
