@@ -95,9 +95,9 @@ class FaceNetLitModule(pl.LightningModule):
         self.train_worst_loss(loss)
         self.train_acc(a_out, p_out, n_out)
 
-        self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=False)
-        self.log("train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=False)
-        self.log("train/worst_loss", self.train_worst_loss, on_step=False, on_epoch=True, prog_bar=False)
+        self.log("train/loss", self.train_loss, on_step=True, on_epoch=True, prog_bar=False)
+        self.log("train/acc", self.train_acc, on_step=True, on_epoch=True, prog_bar=False)
+        self.log("train/worst_loss", self.train_worst_loss, on_step=True, on_epoch=True, prog_bar=False)
 
         msgs = [
             f'Epoch {self.current_epoch}/{self.trainer.max_epochs}',

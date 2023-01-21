@@ -24,6 +24,7 @@ class LFW(Dataset):
         self._persons = self._person_paths.keys()
         self._persons_positive = get_persons_with_at_least_k_images(self._person_paths, 2)
         self.transform = transform or transforms.Compose([  transforms.CenterCrop(size=(150, 150)),
+                                                            transforms.Resize(224),
                                                             transforms.ToTensor(),
                                                             transforms.Normalize(mean = RGB_MEAN,
                                                                                 std = RGB_STD),
