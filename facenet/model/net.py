@@ -1,7 +1,7 @@
 import torch.nn as nn
 from torch import Tensor
-from torchvision.models import resnet18, resnet34
-from torchvision import models
+
+from facenet.utils import instantiate_default_model
 
 
 
@@ -15,23 +15,17 @@ class FaceNet(nn.Module):
         
 
     def _build_model(self) -> nn.Module:
-
-        if self.modelname == 'resnet18':
-            model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
-        elif self.modelname == 'resnet34':
-            model = models.resnet34(weights=models.ResNet34_Weights.DEFAULT)
-        elif self.modelname == 'resnet50':
-            model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
-        elif self.modelname == 'resnet101':
-            model = models.resnet101(weights=models.ResNet101_Weights.DEFAULT)
-        elif self.modelname == 'resnet152':
-            model = models.resnet152(weights=models.ResNet152_Weights.DEFAULT)
-        else:
-            model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
-
-        num_ftrs = model.fc.in_features
-        model.fc =  nn.Linear(num_ftrs, self.embedding_dim)
         
+        model = instantiate_default_model(self.modelname)
+        
+        if 'resnet' in getattr(self, 'modelname'):
+            num_ftrs = model.fc.in_features
+            model.fc =  nn.Linear(num_ftrs, self.embedding_dim)
+
+        elif 'vit' in  getattr(self, 'modelname'):
+            num_ftrs = model.heads.head.in_features
+            model.heads.head = nn.Linear(num_ftrs, self.embedding_dim)
+
         return model
         
         

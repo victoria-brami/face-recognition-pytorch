@@ -9,6 +9,7 @@ import os
 from torchvision import transforms
 from facenet.utils import (extract_name_from_face_image_path,
                      load_image, 
+                     get_model_backbone_from_checkpoint,
                      get_embedding_dims_from_checkpoint)
 
 
@@ -31,9 +32,8 @@ def get_metrics(image_one: Image, image_two: Image, facenet: FaceNet,) -> Dict:
                                                             transforms.Normalize(mean = RGB_MEAN,
                                                                                 std = RGB_STD),
                                                         ])
-    with torch.no_grad():
-        image_one_output = facenet(transform(image_one)[None, :]).detach().numpy()
-        image_two_output = facenet(transform(image_two)[None, :]).detach().numpy()
+    image_one_output = facenet(transform(image_one)[None, :]).detach().numpy()
+    image_two_output = facenet(transform(image_two)[None, :]).detach().numpy()
     
     dist = np.linalg.norm(image_one_output - image_two_output)
     
@@ -94,10 +94,12 @@ def predict(image_one_path: Path,
     
     checkpoint_file = torch.load(checkpoint_path, map_location=device)
     embedding_dim = get_embedding_dims_from_checkpoint(checkpoint_file)
-    net = FaceNet(embedding_dim=embedding_dim)
+    model_name = get_model_backbone_from_checkpoint(checkpoint_file)
+    net = FaceNet(embedding_dim=embedding_dim, modelname=model_name)
     net.eval()
     
-    metrics = get_metrics(image_one, image_two, net)
+    with torch.no_grad():
+        metrics = get_metrics(image_one, image_two, net)
     
     show_predictions(image_one, image_two, facename_one, facename_two, metrics, save_folder, fig_size)
     

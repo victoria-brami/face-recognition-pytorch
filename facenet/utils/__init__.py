@@ -3,6 +3,8 @@ from .utils import (load_image,
                     instantiate_callbacks, 
                     load_checkpoint, 
                     get_embedding_dims_from_checkpoint,
+                    get_model_backbone_from_checkpoint,
+                    instantiate_default_model,
                     rename_weight_dict_keys)
 
 __all__ = [
@@ -11,5 +13,7 @@ __all__ = [
     'get_embedding_dims_from_checkpoint',
     'instantiate_callbacks',
     'load_checkpoint',
+    'get_model_backbone_from_checkpoint',
+    'instantiate_default_model',
     'rename_weight_dict_keys'
 ]
